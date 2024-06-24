@@ -1,8 +1,9 @@
 import { Button } from "./Button";
 
-export function Friend({ friend }) {
+export function Friend({ friend, select, onSelectFriends }) {
+  const isSelected = select?.id === friend.id;
   return (
-    <li>
+    <li className={isSelected ? "selected" : ""}>
       <img src={friend.image} alt={friend.name} />
       {friend.name}
 
@@ -17,7 +18,10 @@ export function Friend({ friend }) {
           {friend.name} Owes you {Math.abs(friend.balance)}€
         </p>
       )}
-      <Button>Select</Button>
+
+      <Button onClick={() => onSelectFriends(friend)}>
+        {isSelected ? "Close" : "Select"}
+      </Button>
     </li>
   );
 }
