@@ -9,20 +9,20 @@ const initialFriends = [
     id: 118836,
     name: "Clark",
     image: "https://i.pravatar.cc/48?u=118836",
-    balance: -7,
+    balance: -7
   },
   {
     id: 933372,
     name: "Sarah",
     image: "https://i.pravatar.cc/48?u=933372",
-    balance: 20,
+    balance: 20
   },
   {
     id: 499476,
     name: "Anthony",
     image: "https://i.pravatar.cc/48?u=499476",
-    balance: 0,
-  },
+    balance: 0
+  }
 ];
 
 export default function App() {
@@ -40,6 +40,15 @@ export default function App() {
     setIsShowAddFriendForm(false);
   };
 
+  const handleUpdateBalance = (value) => {
+    setFriends((friends) =>
+      friends.map((f) =>
+        f.id === select.id ? { ...f, balance: f.balance + value } : f
+      )
+    );
+    setSelect(null);
+  };
+
   return (
     <div className="app">
       <div className="sidebar">
@@ -55,7 +64,12 @@ export default function App() {
           {!isShowAddFriendForm ? "Add Friend" : "Close"}
         </Button>
       </div>
-      {select && <FormSplitBill select={select} />}
+      {select && (
+        <FormSplitBill
+          select={select}
+          onHandleUpdateBalance={handleUpdateBalance}
+        />
+      )}
     </div>
   );
 }

@@ -1,36 +1,42 @@
 import { Button } from "./Button";
 import { useState } from "react";
 
-export function FormSplitBill({ select }) {
-  const [bill, setBill] = useState(null);
-  const [myExpense, setMyExpense] = useState(null);
-  const [friendExpense, setFriendExpense] = useState(null);
+export function FormSplitBill({ select, onHandleUpdateBalance }) {
+  const [bill, setBill] = useState("");
+  const [myExpense, setMyExpense] = useState("");
   const [paidBy, setPaidBy] = useState("user");
+  const friendExpense = bill ? bill - myExpense : "";
+
+  function onHandleSubmit(e) {
+    e.preventDefault();
+    if (!bill || !myExpense) return;
+
+    onHandleUpdateBalance(paidBy === "user" ? friendExpense : -myExpense);
+  }
 
   return (
-    <form className="form-split-bill">
+    <form className="form-split-bill" onSubmit={onHandleSubmit}>
       <h2>Split Bill with {select.name}</h2>
       <label>Bill value</label>
       <input
-        type="number"
+        type="text"
         value={bill}
-        onChange={(e) => setBill(e.target.value)}
+        onChange={(e) => setBill(Number(e.target.value))}
       />
 
       <label>Your expense</label>
       <input
-        type="number"
+        type="text"
         value={myExpense}
-        onChange={(e) => setMyExpense(e.target.value)}
+        onChange={(e) =>
+          setMyExpense(
+            Number(e.target.value) > bill ? myExpense : Number(e.target.value)
+          )
+        }
       />
 
       <label>{select.name}'s expense</label>
-      <input
-        type="number"
-        disabled
-        value={friendExpense}
-        onChange={(e) => setFriendExpense(e.target.value)}
-      />
+      <input type="number" value={friendExpense} disabled />
 
       <label>Who is paying the bill ?</label>
       <select value={paidBy} onChange={(e) => setPaidBy(e.target.value)}>
@@ -38,7 +44,7 @@ export function FormSplitBill({ select }) {
         <option value="friend">{select.name}</option>
       </select>
 
-      <Button>Split Bill</Button>
+      <Button onClick={onHandleSubmit}>Split Bill</Button>
     </form>
   );
 }
