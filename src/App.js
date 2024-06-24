@@ -4,7 +4,7 @@ import { Button } from "./Button";
 import { useState } from "react";
 import { FormSplitBill } from "./FormSplitBill";
 
-export const initialFriends = [
+const initialFriends = [
   {
     id: 118836,
     name: "Clark",
@@ -27,11 +27,20 @@ export const initialFriends = [
 
 export default function App() {
   const [isShowAddFriendForm, setIsShowAddFriendForm] = useState(false);
+  const [friends, setFriends] = useState(initialFriends);
+
+  const handleSetFriends = (newPerson) => {
+    setFriends((friends) => [...friends, newPerson]);
+    setIsShowAddFriendForm(false);
+  };
+
   return (
     <div className="app">
       <div className="sidebar">
-        <FriendsList />
-        {isShowAddFriendForm && <FormAddFriend />}
+        <FriendsList friends={friends} />
+        {isShowAddFriendForm && (
+          <FormAddFriend onHandleFriends={handleSetFriends} />
+        )}
         <Button onClick={() => setIsShowAddFriendForm(!isShowAddFriendForm)}>
           {!isShowAddFriendForm ? "Add Friend" : "Close"}
         </Button>
